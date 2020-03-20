@@ -3,6 +3,15 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 
+ingredient_choices = (('Tomato', 'Tomato'),
+                          ('Eggplant', 'Eggplant'),
+                          ('Celery', 'Celery'),
+                          ('Egg', 'Egg'),
+                          ('Milk', 'Milk'),
+                          ('Fish', 'Fish'),
+                          ('Chicken', 'Chicken'),
+                          ('Oil', 'Oil')
+                          )
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -11,6 +20,13 @@ class Post(models.Model):
     image = models.ImageField(blank=True, null=True)
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
+    difficulty_choices = (
+        ('easy', 'easy'),
+        ('medium', 'medium'),
+        ('hard', 'hard')
+    )
+    level = models.CharField(max_length=6, choices=difficulty_choices)
+    
     
 
     def publish(self):
@@ -18,4 +34,4 @@ class Post(models.Model):
         self.save()
 
     def __str__(self):
-       return self.recipe_name
+        return self.recipe_name
