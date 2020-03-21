@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from multiselectfield import MultiSelectField
 
 
 ingredient_choices = (('Tomato', 'Tomato'),
@@ -27,6 +28,7 @@ class Post(models.Model):
     )
     level = models.CharField(max_length=6, choices=difficulty_choices)
     
+    ingredients = MultiSelectField(choices=ingredient_choices)
     
 
     def publish(self):
