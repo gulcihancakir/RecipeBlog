@@ -1,18 +1,15 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from multiselectfield import MultiSelectField
+from  django.db.models.signals import pre_save
 
+class Ingredient(models.Model):
+    name = models.CharField(max_length=255)
+    posts = models.ManyToManyField('Post', null=True, blank=True)
 
-ingredient_choices = (('Tomato', 'Tomato'),
-                          ('Eggplant', 'Eggplant'),
-                          ('Celery', 'Celery'),
-                          ('Egg', 'Egg'),
-                          ('Milk', 'Milk'),
-                          ('Fish', 'Fish'),
-                          ('Chicken', 'Chicken'),
-                          ('Oil', 'Oil')
-                          )
+    def __str__(self):
+        return self.name
+
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -21,14 +18,14 @@ class Post(models.Model):
     image = models.ImageField(blank=True, null=True)
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
+    ingredients = models.ManyToManyField('Ingredient', null=True, blank=True)
     difficulty_choices = (
         ('easy', 'easy'),
         ('medium', 'medium'),
         ('hard', 'hard')
     )
-    level = models.CharField(max_length=6, choices=difficulty_choices)
     
-    ingredients = MultiSelectField(choices=ingredient_choices)
+    level = models.CharField(max_length=6, choices=difficulty_choices)
     
 
     def publish(self):
@@ -37,3 +34,4 @@ class Post(models.Model):
 
     def __str__(self):
         return self.recipe_name
+
