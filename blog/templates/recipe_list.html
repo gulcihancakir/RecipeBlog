@@ -1,36 +1,64 @@
 {% extends 'home_page.html' %}
 
 {% block content %}
-{% for post in post %}
+{% for post in post_pgn %}
 <div class="post">
-   
+
     <h1><a href="{% url 'recipe_detail' pk=post.pk %}">{{ post.recipe_name }}</a></h1>
     {% if post.image %}
     <img class="recipe-image" src="{{post.image.url}}" alt="Recipe image" width="193" height="130">
-    
+
     {% endif %}
 
     <p>{{ post.description|linebreaksbr|slice:":70" }}
         {% if post.description|length > 70 %}
         ...
         {% endif %}
-
+       
+     
 </div>
 <div class="date">
-        {{ post.created_date|date:"d/m/o" }}
-    </div>
-    <p>by {{post.author}}</p>
-    <p><a href="{% url 'recipe_edit' pk=post.pk %}">edit</a></p>
-    {% endfor %}
-<button class="btn" type="submit">Previous Page</button>
+    {{ post.created_date|date:"d/m/o" }}
+</div>
+<p>by {{post.author}}</p>
+
+
+<p><a href="{% url 'recipe_edit' pk=post.pk %}">edit</a></p>
+
+{% endfor %}
+
 
 <p>Total {{number_post}} Recipes</p>
-<button class="btn" type="submit">Next Page</button>
+<p></p>
 
 <form class="form-inline my-2 my-lg-0">
     <h1>Search</h1>
     <input class="form-control mr-sm-2" type="search" placeholder="ingredients, dish, keyword..."
-        aria-label="ingredients, dish, keyword" name="search">
+        aria-label="ingredients, dish, keyword" name="search",value = "{{request.GET.search}}">
     <button class="btn" type="submit">Submit</button>
 </form>
+
+<div class="pagination">
+    <span class="step-links">
+<!-- Mesala burdaki post gercekten post mu? bizim post modelinin has_previout diye biseyi yok. Bu page ise degiskene page de.-->
+        {% if post_pgn.has_previous %}
+        <button class="btn"><a href="?page={{ post_pgn.previous_page_number }}">previous</a></button>
+        {% endif %}
+        
+        {% if not post_pgn.has_previous %}
+        <button><a href="?page=1"> previous</a></button>
+        {% endif %}
+        <p>Total {{number_post}} Recipes</p>
+
+        {% if post_pgn.has_next %}
+        <button class="btn"><a href="?page={{ post_pgn.next_page_number }}">next</a></button>
+        {% endif %}
+
+        {% if not post_pgn.has_next %}
+        <button><a href="?page={{ post_pgn.paginator.num_pages }}">next</a></button>
+        {% endif %}
+
+        
+    </span>
+</div>
 {% endblock %}

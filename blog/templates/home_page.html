@@ -8,8 +8,16 @@
             <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
             <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
             <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-            <a href="{% url 'recipe_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+            <!-- <a href="{% url 'recipe_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a> -->
             
+            <div class="menu">
+            <a href="{% url 'recipe_list' %}">recipe.com</a>
+            <a href="{% url 'recipe_new' %}">Share a Recipe</a>
+            <!-- <a href="">Logout</a> -->
+            <a href="/admin/logout/">Log out</a>
+            
+            {{request.user.username}}
+            </div>
         <div class="recipes">
            
                 {% block content %}

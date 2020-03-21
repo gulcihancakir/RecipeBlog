@@ -2,7 +2,8 @@
 
 {% block content %}
     <h1>New Recipe</h1>
-    <form method="POST" enctype="multipart/form-data" >{% csrf_token %}
+    
+    <form method="POST" action="/post/" enctype="multipart/form-data" >{% csrf_token %}
         {{ form.as_p }}
         {% if user.is_authenticated %}
         <input type="hidden" name="author" value="{{ request.user.id }}">
