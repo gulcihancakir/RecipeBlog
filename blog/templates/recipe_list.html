@@ -1,64 +1,80 @@
 {% extends 'home_page.html' %}
 
 {% block content %}
-{% for post in post_pgn %}
-<div class="post">
+<div class="posts">
+    {% for post in post_pgn %}
+    <div class="post">
 
-    <h1><a href="{% url 'recipe_detail' pk=post.pk %}">{{ post.recipe_name }}</a></h1>
-    {% if post.image %}
-    <img class="recipe-image" src="{{post.image.url}}" alt="Recipe image" width="193" height="130">
+        <h1><a href="{% url 'recipe_detail' pk=post.pk %}">{{ post.recipe_name }}</a></h1>
+        {% if post.image %}
+        <img class="recipe-image" src="{{post.image.url}}" alt="Recipe image" width="193" height="130">
 
-    {% endif %}
-
-    <p>{{ post.description|linebreaksbr|slice:":70" }}
-        {% if post.description|length > 70 %}
-        ...
         {% endif %}
-       
-     
-</div>
-<div class="date">
-    {{ post.created_date|date:"d/m/o" }}
-</div>
-<p>by {{post.author}}</p>
+
+        <p>{{ post.description|linebreaksbr|slice:":70" }}
+            {% if post.description|length > 70 %}
+            ...
+            {% endif %} </p>
 
 
-<p><a href="{% url 'recipe_edit' pk=post.pk %}">edit</a></p>
+        <div class="abc">
 
-{% endfor %}
+            <p>{{ post.created_date|date:"d/m/o" }}</p>
+
+            {% if post.likes.count < 2%}
+            <p>.( {{post.likes.count}} like ).</p>
+            
+            {% else %}
+            <p>.( {{post.likes.count}} likes ).</p>
+            {% endif %}
+
+            <p>by {{post.author}}</p>
 
 
-<p>Total {{number_post}} Recipes</p>
-<p></p>
-
-<form class="form-inline my-2 my-lg-0">
-    <h1>Search</h1>
-    <input class="form-control mr-sm-2" type="search" placeholder="ingredients, dish, keyword..."
-        aria-label="ingredients, dish, keyword" name="search",value = "{{request.GET.search}}">
-    <button class="btn" type="submit">Submit</button>
-</form>
-
-<div class="pagination">
-    <span class="step-links">
-<!-- Mesala burdaki post gercekten post mu? bizim post modelinin has_previout diye biseyi yok. Bu page ise degiskene page de.-->
-        {% if post_pgn.has_previous %}
-        <button class="btn"><a href="?page={{ post_pgn.previous_page_number }}">previous</a></button>
-        {% endif %}
+            <p><a href="{% url 'recipe_edit' pk=post.pk %}">Edit</a></p>
+        </div>
+    </div>
+    {% endfor %}
+    <form class="search-form">
+            <h2>Search</h2>
+            <input class="form-control" type="search" placeholder="ingredients, dish, keyword..."
+                aria-label="ingredients, dish, keyword" name="search",value = "{{request.GET.search}}">
+            <button class="buttonn" type="submit">Submit</button>
+    </form>
+    
+            <div class="pagination">
         
-        {% if not post_pgn.has_previous %}
-        <button><a href="?page=1"> previous</a></button>
-        {% endif %}
-        <p>Total {{number_post}} Recipes</p>
-
-        {% if post_pgn.has_next %}
-        <button class="btn"><a href="?page={{ post_pgn.next_page_number }}">next</a></button>
-        {% endif %}
-
-        {% if not post_pgn.has_next %}
-        <button><a href="?page={{ post_pgn.paginator.num_pages }}">next</a></button>
-        {% endif %}
-
+            
+            {% if post_pgn.has_previous %}
+            <button type="button" class="button"><a href="?page={{ post_pgn.previous_page_number }}">Previous Page</a></button>
+            {% endif %}
         
-    </span>
+            {% if not post_pgn.has_previous %}
+            <button type="button" class="button"><a href="?page=1"> Previous Page</a></button>
+            
+            {% endif %}
+        
+            {% if post_pgn.has_next %}
+            <button type="button" class="button"><a href="?page={{ post_pgn.next_page_number }}">Next Page</a></button>
+            {% endif %}
+        
+            {% if not post_pgn.has_next %}
+            <button type="button" class="button"><a href="?page={{ post_pgn.paginator.num_pages }}" >Next Page</a></button>
+            {% endif %}
+            <br>
+            <p>Total {{number_post}} Recipes</p>
+        
+        
+        
+        
+        </div>
 </div>
+
+
+
+
+  
+
+
+
 {% endblock %}

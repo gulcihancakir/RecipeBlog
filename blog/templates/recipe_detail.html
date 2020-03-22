@@ -5,27 +5,37 @@
 
 <h1>{{ post.recipe_name }}</h1>
 <div class="post">
-    <p>{{post.author}}</p>
-  
-    
-    
-    <p>{{post.level}}</p>
+    <div class="post-detail">
 
-   
-    <div class="date">
-        {{ post.created_date|date:"d/m/o" }}
-    </div>
-   
+            <p><span class="glyphicon glyphicon-cutlery"></span> {{post.author}}</p>
+            <p><span class="glyphicon glyphicon-book"></span> {{post.level}}</p>  
+            <p><span class="glyphicon glyphicon-time"></span> {{ post.created_date|date:"d/m/o" }}</p>    
+     
+
+        
+
+
+ </div>
+
     {% if post.image %}
     <img class="recipe-image" src="{{post.image.url}}" alt="Recipe image" width="193" height="130">
 
     {% endif %}
+
+    <form action="{% url 'like_post' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" name="post_id" value="{{ post.id }}" class="btn">Like ( {{post.likes.count}} )</button>
+    </form>
+    <p class="detail">Ingredients</p>
+
     <ul>
         {% for ing in post.ingredients.all %}
         <li>{{ ing.name }}</li>
         {% endfor %}
-        
-        </ul>
+
+    </ul>
+    <p class="detail">Description</p>
+
     <p>{{ post.description }}</p>
 </div>
 {% endblock %}
