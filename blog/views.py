@@ -1,18 +1,30 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
 from django.utils import timezone
-from .models import Post,Ingredient
+from .models import Post, Ingredient
 from .forms import PostForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import collections
+from django.db.models import Count
+liste = []
 
 
 def recipe_list(request):
 
     post = Post.objects.filter(
         created_date__lte=timezone.now()).order_by('created_date')
-    
+
     number_post = Post.objects.all().count()
+
+    # a = Post.objects.all()
+    
+    # for i in a:
+    #     liste.append(i)
+    # for i in liste:
+    #     for i in i.ingredients.order_by('name'):
+    #         print(i)
+
     
     search_term = ""
     if 'search' in request.GET:
@@ -24,20 +36,29 @@ def recipe_list(request):
     return render(request, 'recipe_list.html', {'post_pgn': post_pgn, 'number_post': number_post, 'search_term': search_term})
 
 
-def select_ingredients(request):
-    form = PostForm(request.POST)
-    if form.is_valid():
-        post = form.save(commit=False)
-        post.author = request.user
-        post = form.save()
+# def select_ingredients(request):
+#     form = PostForm(request.POST)
+#     if form.is_valid():
+#         post = form.save(commit=False)
+#         post.author = request.user
+#         post = form.save()
 
-    return render(request, 'recipe_detail.html', {'post': post, 'form': form})
+#     return HttpResponse('oldu')
+
+def like_post(request):
+    post=get_object_or_404(Post, id=request.POST.get('post_id'))
+
+    post.likes.add(request.user)
+    
+    
+    return HttpResponseRedirect(post.get_absolute_url())
+
 
 
 
 def recipe_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    
+
     return render(request, 'recipe_detail.html', {'post': post})
 
 
@@ -49,7 +70,7 @@ def recipe_new(request):
             post.author = request.user
             post.published_date = timezone.now()
             post.save()
-
+            form.save_m2m()
             return redirect('recipe_detail', pk=post.pk)
     else:
         form = PostForm()
@@ -63,12 +84,10 @@ def recipe_edit(request, pk):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
-            form.save()
+            post.published_date = timezone.now()
             post.save()
-
+            form.save_m2m()
             return redirect('recipe_detail', pk=post.pk)
-
-        else:
-            form = PostForm(instance=post)
-
+    else:
+        form = PostForm(instance=post)
     return render(request, 'recipe_edit.html', {'form': form})
