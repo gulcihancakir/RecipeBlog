@@ -1,0 +1,165 @@
+
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-template-rows: auto auto auto;
+    grid-template-areas: 
+      "nav nav nav "
+      "content . sidebar"
+      "footer footer sidebar ";
+}
+
+
+.menu {
+    grid-area:nav;
+    background-color: #333;
+    grid-column-start: 1;
+    grid-column-end: 5;
+    margin-top: 20px;
+    margin-left:75px;
+    margin-right:150px;
+}
+  .menu>ul>li{
+    display: inline;
+    color : white;
+
+}
+
+.menu>ul>li>a{
+    display: inline;
+    color : white;
+    text-decoration: none;
+
+}
+.menu>ul>li>a:hover{
+    color: rgb(194, 192, 188);
+    text-decoration: none;
+
+}
+
+.posts{
+    display: grid;
+    
+    grid-template-rows: auto auto;
+    grid-template-columns: 700px ;
+    
+    margin-left:75px;
+   
+    
+    grid-gap: 10px;
+   
+}
+.post{
+    margin-top:20px;
+    padding:10px;
+    font-style: italic;
+    background-color: rgb(255, 251, 251);
+    border: 2px solid rgb(177, 176, 176);
+    border-radius: 10px;
+    color:black;
+}
+.post>h1>a{
+    color:black;
+    text-decoration: none;
+    }
+
+.abc>p>a{
+        text-decoration: none;
+    }
+.abc>p{
+    display: inline;
+}
+.pagination{
+    grid-area: footer;
+    margin-left:275px;
+
+}
+.pagination>p{
+    display: inline;
+   margin-left:80px;
+    
+}
+
+.search-form{
+    grid-area: sidebar;
+    margin-right: 300px;
+    grid-row-start:2;
+    grid-row-end: 3;
+    
+
+}
+.search-form>buttonn{
+    color:white;
+}
+
+.btn{
+    color: black;
+    display: inline-block;
+    background-color:rgb(205, 243, 205);
+    
+    background-size:15px;
+    border-radius: 30px;
+    font-size: 15px;
+    margin: 4px 2px;
+}
+.button{
+    color: black;
+    display: inline-block;
+    background-color:rgb(238, 240, 238);
+    
+    background-size:15px;
+    border-radius: 30px;
+    font-size: 15px;
+    margin: 4px 2px;
+}
+.pagination{
+    grid-area:footer;
+
+}
+.pagination>button>a{
+    
+    text-decoration: none;
+    color: black;
+
+}
+.btn>a{
+color:rgb(65, 63, 63);
+text-decoration: none;
+}
+.posts>p{
+    display: inline;
+}
+
+.post-detail>p{
+    display: inline;
+    
+    font-weight: bold;
+    margin-right: 0px;
+    
+}
+.detail{
+    font-size:18px;
+    
+}
+.description-text{
+    grid-area: content;
+}
+.post-edit{
+    margin-left:75px;
+    margin-top:10px;
+    display:inline-block;
+}
+.post-edit-btn{
+    background-color:powderblue;
+    color:black;
+    font-size: 30px;
+    text-align: center;
+    
+}
+.post-edit-cancelbtn>a{
+    color:black;
+    text-decoration: none;
+    font-size: 20px;
+    text-align: center;
+}
