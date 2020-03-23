@@ -3,20 +3,14 @@
 
 {% block content %}
 
-<h1>{{ post.recipe_name }}</h1>
-<div class="post">
-    <div class="post-detail">
 
+    <div class="post-detail">
+            <h1>{{ post.recipe_name }}</h1>
             <p><span class="glyphicon glyphicon-cutlery"></span> {{post.author}}</p>
             <p><span class="glyphicon glyphicon-book"></span> {{post.level}}</p>  
             <p><span class="glyphicon glyphicon-time"></span> {{ post.created_date|date:"d/m/o" }}</p>    
      
-
-        
-
-
- </div>
-
+ <br>
     {% if post.image %}
     <img class="recipe-image" src="{{post.image.url}}" alt="Recipe image" width="193" height="130">
 
@@ -31,11 +25,13 @@
     <ul>
         {% for ing in post.ingredients.all %}
         <li>{{ ing.name }}</li>
+        
         {% endfor %}
 
     </ul>
     <p class="detail">Description</p>
-
-    <p>{{ post.description }}</p>
+<br>
+    <p class="description-text">{{ post.description }}</p>
 </div>
+
 {% endblock %}

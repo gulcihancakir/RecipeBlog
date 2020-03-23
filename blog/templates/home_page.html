@@ -1,40 +1,41 @@
 {% load static %}
 <html>
+
     <head>
         <title>Home Page</title>
-       
+
     </head>
+
     <body>
-            <meta http-equiv="content-type" content="text/plain; charset=utf-8" />
-            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-                    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-                    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-            <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        <meta http-equiv="content-type" content="text/plain; charset=utf-8" />
 
-            <div class = "grid-container">
-            <div class="menu">
-<ul>
-          <li><a href="{% url 'recipe_list' %}">recipe.com</a></li>  
-            
-          <li><a href="{% url 'recipe_new' %}">Share a Recipe</a></li>
-            <!-- <a href="">Logout</a> -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        <div class="grid-container">
 
-            <li> {{request.user.username}}</li>
+        <div class="menu">
+            <ul>
+                <li><a href="{% url 'recipe_list' %}">recipe.com</a></li>
 
-            <li><a href="/admin/logout/">Log out</a></li>
-            
-        </ul>
-            </div>
-        <div class="recipes">
-           
-                {% block content %}
-                {% endblock %}
-                </div>
-            </div>
+                <li><a href="{% url 'recipe_new' %}">Share a Recipe</a></li>
+                <!-- <a href="">Logout</a> -->
+
+                <li> ( {{request.user.username}} )</li>
+
+                <li><a href="/admin/logout/">Log out</a></li>
+
+            </ul>
         </div>
-    
-    </div>
-    </body>
+        <div class="posts">
+            {% block content %}
+            {% endblock %}
+        </div>
+</div>
+</div>
+
+</div>
+</body>
+
 </html>

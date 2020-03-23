@@ -1,7 +1,7 @@
 {% extends 'home_page.html' %}
 
 {% block content %}
-<div class="posts">
+
     {% for post in post_pgn %}
     <div class="post">
 
@@ -11,7 +11,7 @@
 
         {% endif %}
 
-        <p>{{ post.description|linebreaksbr|slice:":70" }}
+        <p>{{ post.description|linebreaksbr|slice:":200" }}
             {% if post.description|length > 70 %}
             ...
             {% endif %} </p>
@@ -19,6 +19,7 @@
 
         <div class="abc">
 
+                
             <p>{{ post.created_date|date:"d/m/o" }}</p>
 
             {% if post.likes.count < 2%}
@@ -29,19 +30,33 @@
             {% endif %}
 
             <p>by {{post.author}}</p>
+           {{post.ingredients.post_id}}
+       {%if user.id == post.author.id %}
+       
+       <p>.<a href="{% url 'recipe_edit' pk=post.pk %}">Edit</a></p>
 
+            {% endif %}
 
-            <p><a href="{% url 'recipe_edit' pk=post.pk %}">Edit</a></p>
         </div>
     </div>
     {% endfor %}
+</div>
     <form class="search-form">
             <h2>Search</h2>
             <input class="form-control" type="search" placeholder="ingredients, dish, keyword..."
                 aria-label="ingredients, dish, keyword" name="search",value = "{{request.GET.search}}">
             <button class="buttonn" type="submit">Submit</button>
+           
     </form>
-    
+    <br>
+    <ul class="ingredient-top">
+    <p>Top Used Ingredients</p>
+    {% for i in ing_list %}
+            <li>{{i}}</li>
+            {% endfor %}
+          </ul> 
+        
+</div>
             <div class="pagination">
         
             
@@ -64,17 +79,6 @@
             <br>
             <p>Total {{number_post}} Recipes</p>
         
-        
-        
-        
-        </div>
-</div>
-
-
-
-
-  
-
-
-
+          </div>
+         
 {% endblock %}

@@ -1,14 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import timezone
 from .models import Post, Ingredient
 from .forms import PostForm
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import collections
 from django.db.models import Count
-liste = []
-
+from django.db.models import Q
+from django.db.models import Sum
 
 def recipe_list(request):
 
@@ -17,23 +16,24 @@ def recipe_list(request):
 
     number_post = Post.objects.all().count()
 
-    # a = Post.objects.all()
+   
     
-    # for i in a:
-    #     liste.append(i)
-    # for i in liste:
-    #     for i in i.ingredients.order_by('name'):
-    #         print(i)
-
+    ing_list=[]
+    ings=Ingredient.objects.values('name').annotate(Count('post')).order_by('-post__count')
+    for i in ings:
+        ing=i['name'],i['post__count']
+        ing_list.append(ing)
+        
     
     search_term = ""
     if 'search' in request.GET:
         search_term = request.GET['search']
-        post = post.filter(description__icontains=search_term)
+        post = post.filter(Q(description__icontains=search_term)
+                           | Q(recipe_name__icontains=search_term))
     paginator = Paginator(post, 2)
     page = request.GET.get('page')
     post_pgn = paginator.get_page(page)
-    return render(request, 'recipe_list.html', {'post_pgn': post_pgn, 'number_post': number_post, 'search_term': search_term})
+    return render(request, 'recipe_list.html', {'post_pgn': post_pgn, 'number_post': number_post, 'search_term': search_term,'ing_list':ing_list})
 
 
 # def select_ingredients(request):
@@ -46,20 +46,17 @@ def recipe_list(request):
 #     return HttpResponse('oldu')
 
 def like_post(request):
-    post=get_object_or_404(Post, id=request.POST.get('post_id'))
+    post = get_object_or_404(Post, id=request.POST.get('post_id'))
 
     post.likes.add(request.user)
-    
-    
+
     return HttpResponseRedirect(post.get_absolute_url())
-
-
 
 
 def recipe_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
-
     return render(request, 'recipe_detail.html', {'post': post})
+
 
 
 def recipe_new(request):
@@ -90,4 +87,4 @@ def recipe_edit(request, pk):
             return redirect('recipe_detail', pk=post.pk)
     else:
         form = PostForm(instance=post)
-    return render(request, 'recipe_edit.html', {'form': form})
+    return render(request, 'recipe_edit.html', {'form': form, 'post': post})

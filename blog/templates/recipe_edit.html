@@ -1,14 +1,25 @@
 {% extends 'home_page.html' %}
 
 {% block content %}
-    <h1>New Recipe</h1>
-    
+<div class="post-edit">
     <form method="POST"  enctype="multipart/form-data" >{% csrf_token %}
+
+        <h1>New Recipe</h1>
+        <p>{{request.user.username}}</p>
+        {{ post.author }}
+ 
         {{ form.as_p }}
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated  %}
+       
+       
+
         <input type="hidden" name="author" value="{{ request.user.id }}">
-        <button type="submit" class="save btnt">Save</button>
+        <button type="submit" class="post-edit-btn">Save</button>
 
         {% endif %}
+
     </form>
+    <button type="submit" class="post-edit-cancelbtn"><a href="{% url 'recipe_list' %}">Cancel</a></button>
+</div>
+
 {% endblock %}
