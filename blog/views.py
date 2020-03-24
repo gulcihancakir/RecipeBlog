@@ -9,6 +9,7 @@ from django.db.models import Count
 from django.db.models import Q
 from django.db.models import Sum
 
+
 def recipe_list(request):
 
     post = Post.objects.filter(
@@ -16,34 +17,27 @@ def recipe_list(request):
 
     number_post = Post.objects.all().count()
 
-   
-    
-    ing_list=[]
-    ings=Ingredient.objects.values('name').annotate(Count('post')).order_by('-post__count')
+    ing_list = []
+    ings = Ingredient.objects.values('name').annotate(
+        Count('post')).order_by('-post__count')
     for i in ings:
-        ing=i['name'],i['post__count']
+        ing = ('{} ({})'.format(i['name'], i['post__count']))
         ing_list.append(ing)
-        
+    
     
     search_term = ""
     if 'search' in request.GET:
         search_term = request.GET['search']
         post = post.filter(Q(description__icontains=search_term)
                            | Q(recipe_name__icontains=search_term))
+        
     paginator = Paginator(post, 2)
     page = request.GET.get('page')
     post_pgn = paginator.get_page(page)
-    return render(request, 'recipe_list.html', {'post_pgn': post_pgn, 'number_post': number_post, 'search_term': search_term,'ing_list':ing_list})
+    return render(request, 'recipe_list.html', {'post_pgn': post_pgn, 'number_post': number_post, 'search_term': search_term, 'ing_list': ing_list[:5]})
 
 
-# def select_ingredients(request):
-#     form = PostForm(request.POST)
-#     if form.is_valid():
-#         post = form.save(commit=False)
-#         post.author = request.user
-#         post = form.save()
 
-#     return HttpResponse('oldu')
 
 def like_post(request):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
@@ -56,7 +50,6 @@ def like_post(request):
 def recipe_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     return render(request, 'recipe_detail.html', {'post': post})
-
 
 
 def recipe_new(request):
