@@ -22,11 +22,13 @@
                 
             <p>{{ post.created_date|date:"d/m/o" }}</p>
 
-            {% if post.likes.count < 2%}
+            {% if post.likes.count > 0 and post.likes.count < 2%}
             <p>.( {{post.likes.count}} like ).</p>
-            
+            {% elif post.likes.count < 1 %}
+            <p>.( No Like  ).</p>
+
             {% else %}
-            <p>.( {{post.likes.count}} likes ).</p>
+            <p>.( {{post.likes.count}} likes  ).</p>
             {% endif %}
 
             <p>by {{post.author}}</p>
@@ -41,44 +43,49 @@
     </div>
     {% endfor %}
 </div>
-    <form class="search-form">
+<div class="sidebar">
+    <form  class="search-form">
             <h2>Search</h2>
-            <input class="form-control" type="search" placeholder="ingredients, dish, keyword..."
+            <input  class="form-control" type="text" placeholder="ingredients, dish, keyword..."
                 aria-label="ingredients, dish, keyword" name="search",value = "{{request.GET.search}}">
-            <button class="buttonn" type="submit">Submit</button>
+            <button class="search-button" type="submit">Submit</button>
            
     </form>
+
     <br>
     <ul class="ingredient-top">
     <p>Top Used Ingredients</p>
-    {% for i in ing_list %}
-            <li>{{i}}</li>
+    {% for ing in ing_list %}
+    <li>{{ing}}</li>
+    <a href="">{{li}}</a>
             {% endfor %}
+          
           </ul> 
-        
-</div>
-            <div class="pagination">
+        </div>
+              
+        <div class="pagination">
         
             
             {% if post_pgn.has_previous %}
-            <button type="button" class="button"><a href="?page={{ post_pgn.previous_page_number }}">Previous Page</a></button>
+            <button type="button" class="button"><a href="?{% if search_term %}search={{search_term}}&{% endif %}page={{ post_pgn.previous_page_number }}">Previous Page</a></button>
             {% endif %}
         
             {% if not post_pgn.has_previous %}
-            <button type="button" class="button"><a href="?page=1"> Previous Page</a></button>
+            <button type="button" class="button"><a href="?{% if search_term %}search={{search_term}}&{% endif %}page=1"> Previous Page</a></button>
             
             {% endif %}
         
             {% if post_pgn.has_next %}
-            <button type="button" class="button"><a href="?page={{ post_pgn.next_page_number }}">Next Page</a></button>
+            <button type="button" class="button"><a href="?{% if search_term %}search={{search_term}}&{% endif %}page={{ post_pgn.next_page_number }}">Next Page</a></button>
             {% endif %}
         
             {% if not post_pgn.has_next %}
-            <button type="button" class="button"><a href="?page={{ post_pgn.paginator.num_pages }}" >Next Page</a></button>
+            <button type="button" class="button"><a href="?{% if search_term %}search={{search_term}}&{% endif %}page={{ post_pgn.paginator.num_pages }}" >Next Page</a></button>
             {% endif %}
             <br>
             <p>Total {{number_post}} Recipes</p>
-        
+            
           </div>
+          
          
 {% endblock %}
