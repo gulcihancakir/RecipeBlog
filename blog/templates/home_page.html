@@ -21,17 +21,25 @@
 
                 <li><a href="{% url 'recipe_new' %}">Share a Recipe</a></li>
                 <!-- <a href="">Logout</a> -->
-
+                
+                {% if request.user.username %}
                 <li> ( {{request.user.username}} )</li>
 
                 <li><a href="/admin/logout/">Log out</a></li>
+                {% else %}
+                <li><a href="/admin/login/">Log in</a></li>
 
+                {%endif%}
             </ul>
         </div>
+        
+        
         <div class="posts">
             {% block content %}
             {% endblock %}
         </div>
+        
+       
 </div>
 </div>
 

@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=255)
@@ -25,9 +26,9 @@ class Post(models.Model):
         ('medium', 'medium'),
         ('hard', 'hard')
     )
-    
+    INTEGER_CHOICES= [tuple([x,x]) for x in range(1,6)]
     level = models.CharField(max_length=6, choices=difficulty_choices)
-    
+    vote=models.IntegerField( choices=INTEGER_CHOICES,null=True,blank=True)
 
     def publish(self):
         self.published_date = timezone.now()
