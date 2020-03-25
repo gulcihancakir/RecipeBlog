@@ -75,3 +75,9 @@ def recipe_edit(request, pk):
     else:
         form = PostForm(instance=post)
     return render(request, 'recipe_edit.html', {'form': form, 'post': post})
+
+def recipe_delete(request, pk):
+    instance = Post.objects.get(pk=pk)
+    instance.delete()
+
+    return redirect('recipe_list')

@@ -37,7 +37,7 @@
         {%if user.id == post.author.id %}
 
         <p>.<a href="{% url 'recipe_edit' pk=post.pk %}">Edit</a></p>
-
+        <p>.<a href="{% url 'recipe_delete' pk=post.pk %}">Delete</a></p>
         {% endif %}
 
     </div>
