@@ -8,4 +8,3 @@ class PostForm(forms.ModelForm):
         model=Post
         fields=('recipe_name','image','description','level', 'ingredients',)
         
-        # ingredient = forms.ModelMultipleChoiceField(Ingredient.objects.all())

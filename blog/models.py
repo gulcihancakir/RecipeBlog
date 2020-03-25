@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255,unique=True)
     posts = models.ManyToManyField('Post', null=True, blank=True)
 
     def __str__(self):
@@ -27,8 +27,7 @@ class Post(models.Model):
         ('hard', 'hard')
     )
     INTEGER_CHOICES= [tuple([x,x]) for x in range(1,6)]
-    level = models.CharField(max_length=6, choices=difficulty_choices)
-    vote=models.IntegerField( choices=INTEGER_CHOICES,null=True,blank=True)
+    level = models.CharField(max_length=6, choices=difficulty_choices,null=True,blank=True)
 
     def publish(self):
         self.published_date = timezone.now()

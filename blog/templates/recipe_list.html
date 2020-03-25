@@ -2,90 +2,109 @@
 
 {% block content %}
 
-    {% for post in post_pgn %}
-    <div class="post">
+{% for post in post_pgn %}
+<div class="post">
 
-        <h1><a href="{% url 'recipe_detail' pk=post.pk %}">{{ post.recipe_name }}</a></h1>
-        {% if post.image %}
-        <img class="recipe-image" src="{{post.image.url}}" alt="Recipe image" width="193" height="130">
+    <h1><a href="{% url 'recipe_detail' pk=post.pk %}">{{ post.recipe_name }}</a></h1>
+    {% if post.image %}
+    <img class="recipe-image" src="{{post.image.url}}" alt="Recipe image" width="193" height="130">
+
+    {% endif %}
+
+    <p>{{ post.description|linebreaksbr|slice:":200" }}
+        {% if post.description|length > 70 %}
+        ...
+        {% endif %} </p>
+
+
+
+    <div class="recipe-info">
+
+
+        <p>{{ post.created_date|date:"d/m/o" }}</p>
+
+        {% if post.likes.count > 0 and post.likes.count < 2%}
+        <p>.( {{post.likes.count}} like ).</p>
+        {% elif post.likes.count < 1 %}
+        <p>.( No Like ).</p>
+
+        {% else %}
+        <p>.( {{post.likes.count}} likes ).</p>
+        {% endif %}
+
+        <p>by {{post.author}}</p>
+        {{post.ingredients.post_id}}
+        {%if user.id == post.author.id %}
+
+        <p>.<a href="{% url 'recipe_edit' pk=post.pk %}">Edit</a></p>
 
         {% endif %}
 
-        <p>{{ post.description|linebreaksbr|slice:":200" }}
-            {% if post.description|length > 70 %}
-            ...
-            {% endif %} </p>
-
-
-        <div class="abc">
-
-                
-            <p>{{ post.created_date|date:"d/m/o" }}</p>
-
-            {% if post.likes.count > 0 and post.likes.count < 2%}
-            <p>.( {{post.likes.count}} like ).</p>
-            {% elif post.likes.count < 1 %}
-            <p>.( No Like  ).</p>
-
-            {% else %}
-            <p>.( {{post.likes.count}} likes  ).</p>
-            {% endif %}
-
-            <p>by {{post.author}}</p>
-           {{post.ingredients.post_id}}
-       {%if user.id == post.author.id %}
-       
-       <p>.<a href="{% url 'recipe_edit' pk=post.pk %}">Edit</a></p>
-
-            {% endif %}
-
-        </div>
     </div>
-    {% endfor %}
+</div>
+{% endfor %}
 </div>
 <div class="sidebar">
-    <form  class="search-form">
-            <h2>Search</h2>
-            <input  class="form-control" type="text" placeholder="ingredients, dish, keyword..."
-                aria-label="ingredients, dish, keyword" name="search",value = "{{request.GET.search}}">
-            <button class="search-button" type="submit">Submit</button>
-           
+    <form class="search-form">
+        <h2>Search</h2>
+        <input class="form-control" type="text" placeholder="ingredients, dish, keyword..."
+            aria-label="ingredients, dish, keyword" name="search" ,value="{{request.GET.search}}">
+        <button class="search-button" type="submit">Submit</button>
+
     </form>
 
     <br>
     <ul class="ingredient-top">
-    <p>Top Used Ingredients</p>
-    {% for ing in ing_list %}
-    <li>{{ing}}</li>
-    <a href="">{{li}}</a>
+        <p>Top Used Ingredients</p>
+
+
+        {% regroup ings by post__count as ings_list%}
+        <ul>
+               
+            {% for name in ings_list %}
+            <!-- <li>{{name.grouper }} </li> -->
+            
+            {% for ing in name.list %}
+            <li>{{ing.name}}( {{ ing.post__count }} )</li>
             {% endfor %}
-          
-          </ul> 
-        </div>
-              
-        <div class="pagination">
-        
-            
-            {% if post_pgn.has_previous %}
-            <button type="button" class="button"><a href="?{% if search_term %}search={{search_term}}&{% endif %}page={{ post_pgn.previous_page_number }}">Previous Page</a></button>
-            {% endif %}
-        
-            {% if not post_pgn.has_previous %}
-            <button type="button" class="button"><a href="?{% if search_term %}search={{search_term}}&{% endif %}page=1"> Previous Page</a></button>
-            
-            {% endif %}
-        
-            {% if post_pgn.has_next %}
-            <button type="button" class="button"><a href="?{% if search_term %}search={{search_term}}&{% endif %}page={{ post_pgn.next_page_number }}">Next Page</a></button>
-            {% endif %}
-        
-            {% if not post_pgn.has_next %}
-            <button type="button" class="button"><a href="?{% if search_term %}search={{search_term}}&{% endif %}page={{ post_pgn.paginator.num_pages }}" >Next Page</a></button>
-            {% endif %}
-            <br>
-            <p>Total {{number_post}} Recipes</p>
-            
-          </div>
-          
-         
+
+            {% endfor %}
+
+        </ul>
+
+    </ul>
+</div>
+
+<div class="pagination">
+
+
+    {% if post_pgn.has_previous %}
+    <button type="button" class="button"><a
+            href="?{% if search_term %}search={{search_term}}&{% endif %}page={{ post_pgn.previous_page_number }}">Previous
+            Page</a></button>
+    {% endif %}
+
+    {% if not post_pgn.has_previous %}
+    <button type="button" class="button"><a href="?{% if search_term %}search={{search_term}}&{% endif %}page=1">
+            Previous Page</a></button>
+
+    {% endif %}
+
+    {% if post_pgn.has_next %}
+    <button type="button" class="button"><a
+            href="?{% if search_term %}search={{search_term}}&{% endif %}page={{ post_pgn.next_page_number }}">Next
+            Page</a></button>
+    {% endif %}
+
+    {% if not post_pgn.has_next %}
+    <button type="button" class="button"><a
+            href="?{% if search_term %}search={{search_term}}&{% endif %}page={{ post_pgn.paginator.num_pages }}">Next
+            Page</a></button>
+    {% endif %}
+    <br>
+    <p>Total {{post_pgn.paginator.count}} Recipes</p>
+
+</div>
+
+
 {% endblock %}

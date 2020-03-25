@@ -20,7 +20,7 @@
                 <li><a href="{% url 'recipe_list' %}">recipe.com</a></li>
 
                 <li><a href="{% url 'recipe_new' %}">Share a Recipe</a></li>
-                <!-- <a href="">Logout</a> -->
+                
                 
                 {% if request.user.username %}
                 <li> ( {{request.user.username}} )</li>

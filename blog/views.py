@@ -3,11 +3,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import timezone
 from .models import Post, Ingredient
 from .forms import PostForm
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-import collections
+from django.core.paginator import Paginator
 from django.db.models import Count
 from django.db.models import Q
-from django.db.models import Sum
+from django.db import models
 
 
 def recipe_list(request):
@@ -17,25 +16,20 @@ def recipe_list(request):
 
     number_post = Post.objects.all().count()
 
-    ing_list = []
     ings = Ingredient.objects.values('name').annotate(
-        Count('post')).order_by('-post__count')
-    for i in ings:
-        ing = ('{} ({})'.format(i['name'], i['post__count']))
-        ing_list.append(ing)
-    
-    
+        Count('post')).order_by('-post__count')[:5]
+
     search_term = ""
     if 'search' in request.GET:
         search_term = request.GET['search']
         post = post.filter(Q(description__icontains=search_term)
                            | Q(recipe_name__icontains=search_term))
-        
+
     paginator = Paginator(post, 2)
     page = request.GET.get('page')
     post_pgn = paginator.get_page(page)
-    return render(request, 'recipe_list.html', {'post_pgn': post_pgn, 'number_post': number_post, 'search_term': search_term, 'ing_list': ing_list[:5]})
 
+    return render(request, 'recipe_list.html', {'post_pgn': post_pgn, 'number_post': number_post, 'search_term': search_term, 'ings': ings})
 
 
 
